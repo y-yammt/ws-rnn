@@ -1,0 +1,9 @@
+dependencies:
+  pre:
+    - sudo apt-get update; sudo apt-get install cmake
+  override:
+    - cmake .; make
+test:
+  override:
+    # Nothing to do
+    - echo "" > /dev/null
