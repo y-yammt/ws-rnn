@@ -1,4 +1,6 @@
 # Faster RNNLM (HS/NCE) toolkit
+[![Circle CI](https://circleci.com/gh/y-yammt/ws-rnn/tree/master.svg?style=svg&circle-token=3d72ad5c0e90eb09a156e66d86ce028a59b2b9a3)](https://circleci.com/gh/y-yammt/ws-rnn/tree/master)
+
 In a nutshell, the goal of this project is to create an rnnlm implementation that can be trained on huge datasets (several billions of words) and very large vocabularies (several hundred thousands) and used in real-world ASR and MT problems.
 Besides, to achieve better results this implementation supports such praised setups as ReLU+DiagonalInitialization [1], GRU [2], NCE [3], and RMSProp [4].
 
