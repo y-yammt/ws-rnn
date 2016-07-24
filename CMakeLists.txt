@@ -12,6 +12,7 @@ IF ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 ENDIF()
 
 OPTION(NOTHREAD "disable threads" OFF)
+OPTION(TEST "build unit tests" ON)
 
 SET(SOURCE_DIR src)
 SET(THIRD_PARTY_DIR ${SOURCE_DIR}/third_party)
@@ -42,7 +43,6 @@ SET(SOURCE_FILES
   ${RNN_SOURCE_DIR}/maxent.cc
   ${RNN_SOURCE_DIR}/nce.cc
   ${RNN_SOURCE_DIR}/nnet.cc
-  ${RNN_SOURCE_DIR}/rnnlm.cc
   ${RNN_SOURCE_DIR}/words.cc
   ${RNN_SOURCE_DIR}/layers/gru_layer.cc
   ${RNN_SOURCE_DIR}/layers/interface.cc
@@ -50,7 +50,7 @@ SET(SOURCE_FILES
   ${RNN_SOURCE_DIR}/layers/scrn_layer.cc
   ${RNN_SOURCE_DIR}/layers/simple_layer.cc)
 
-ADD_EXECUTABLE(${PROGRAM_NAME} ${SOURCE_FILES})
+ADD_EXECUTABLE(${PROGRAM_NAME} ${RNN_SOURCE_DIR}/rnnlm.cc ${SOURCE_FILES})
 
 TARGET_LINK_LIBRARIES(${PROGRAM_NAME} m stdc++)
 
@@ -60,4 +60,25 @@ ENDIF ()
 
 IF (NOT APPLE)
   TARGET_LINK_LIBRARIES(${PROGRAM_NAME} rt)
+ENDIF ()
+
+# Build unit tests
+IF (TEST)
+  SET(UNIT_TEST_NAME unittests)
+
+  ADD_SUBDIRECTORY(${THIRD_PARTY_DIR}/googletest-release-1.7.0)
+  ENABLE_TESTING()
+  INCLUDE_DIRECTORIES(${gtest_SOURCE_DIR} ${gtest_SOURCE_DIR}/include)
+
+  SET(UNIT_TEST_FILES
+    ${SOURCE_FILES}
+  )
+
+  ADD_EXECUTABLE(${UNIT_TEST_NAME} ${RNN_SOURCE_DIR}/rnnlm_tests.cc ${UNIT_TEST_FILES})
+
+  TARGET_LINK_LIBRARIES(${UNIT_TEST_NAME}
+    pthread
+    gtest
+    gtest_main
+  )
 ENDIF ()

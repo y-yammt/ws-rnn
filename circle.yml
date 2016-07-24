@@ -5,5 +5,4 @@ dependencies:
     - cmake .; make
 test:
   override:
-    # Nothing to do
-    - echo "" > /dev/null
+    - ./unittests
