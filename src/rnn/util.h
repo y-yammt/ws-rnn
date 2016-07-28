@@ -3,9 +3,7 @@
 
 #include <inttypes.h>
 #include <stdio.h>
-
-#include <stdio.h>
-
+#include <cmath>
 #include <Eigen/Dense>
 
 #include "./settings.h"
@@ -88,7 +86,7 @@ inline void InitNormal(Real stddev, Matrix* weights) {
 
 
 inline Real Clip(Real x, Real max_abs) {
-  x = (x < 0 || x > 0) ? x : 0;  // replace nan with 0
+  x = std::isnan(x) ? 0 : x;  // replace nan with 0
   x = (x < max_abs) ? x : max_abs;
   x = (x > -max_abs) ? x : -max_abs;
   return x;
@@ -111,7 +109,7 @@ inline void ShrinkMatrix(Eigen::Ref<RowMatrix> matrix, Real max_abs) {
     Real& x = matrix.data()[i];
 
     // NaN -> zero
-    x = (x < 0 || x > 0) ? x : 0;
+    x = std::isnan(x) ? 0 : x;
 
     // inf -> huge
     x = (x > huge) ? huge : x;
