@@ -109,7 +109,7 @@ inline void ShrinkMatrix(Eigen::Ref<RowMatrix> matrix, Real max_abs) {
     Real& x = matrix.data()[i];
 
     // NaN -> zero
-    x = (x < 0 || x > 0) ? x : 0;
+    x = std::isnan(x) ? 0 : x;
 
     // inf -> huge
     x = (x > huge) ? huge : x;
