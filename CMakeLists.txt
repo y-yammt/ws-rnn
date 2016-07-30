@@ -60,6 +60,32 @@ IF (NOT APPLE)
   TARGET_LINK_LIBRARIES(${PROGRAM_NAME} rt)
 ENDIF ()
 
+# Build nmt
+SET(PROGRAM_NMT_NAME ws-nmt)
+SET(NMT_SOURCE_FILES
+        ${RNN_SOURCE_DIR}/hierarchical_softmax.cc
+        ${RNN_SOURCE_DIR}/maxent.cc
+        ${RNN_SOURCE_DIR}/nce.cc
+        ${RNN_SOURCE_DIR}/nmt_nnet.cc
+        ${RNN_SOURCE_DIR}/words.cc
+        ${RNN_SOURCE_DIR}/layers/gru_layer.cc
+        ${RNN_SOURCE_DIR}/layers/interface.cc
+        ${RNN_SOURCE_DIR}/layers/layer_stack.cc
+        ${RNN_SOURCE_DIR}/layers/scrn_layer.cc
+        ${RNN_SOURCE_DIR}/layers/simple_layer.cc)
+
+ADD_EXECUTABLE(${PROGRAM_NMT_NAME} ${RNN_SOURCE_DIR}/nmt.cc ${NMT_SOURCE_FILES})
+
+TARGET_LINK_LIBRARIES(${PROGRAM_NMT_NAME} m stdc++)
+
+IF (NOT NOTHREAD AND CMAKE_THREAD_LIBS_INIT)
+  TARGET_LINK_LIBRARIES(${PROGRAM_NMT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+ENDIF ()
+
+IF (NOT APPLE)
+  TARGET_LINK_LIBRARIES(${PROGRAM_NMT_NAME} rt)
+ENDIF ()
+
 # Build unit tests
 IF (TEST)
   SET(UNIT_TEST_NAME unittests)

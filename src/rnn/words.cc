@@ -6,8 +6,6 @@
 #include <algorithm>
 
 namespace {
-const char kEOSTag[] = "</s>";
-const int kEOSSize = sizeof(kEOSTag);
 const size_t kHashMinSize = 100000;
 const double kHashMinFactor = 0.5;
 const double kHashMaxFactor = 0.8;
@@ -71,8 +69,8 @@ bool WordReader::ReadWord(char* word) {
   for (; IsSpace(*pointer_); ++pointer_) {}
 
   if (*pointer_ == 0) {
-    strncpy(word, kEOSTag, MAX_STRING - 1);
-    word[std::min(MAX_STRING, kEOSSize - 1)] = 0;
+    strncpy(word, kEOS1Tag, MAX_STRING - 1);
+    word[std::min(MAX_STRING, kEOS1Size - 1)] = 0;
     pointer_ = NULL;
   } else {
     int i = 0;
@@ -99,7 +97,7 @@ void WordReader::SetChunk(int chunk, int chunk_count) {
   }
   if (chunk != 0) {
     // skipping to the next newline
-    for (char tmp[MAX_STRING]; ReadWord(tmp) && strcmp(tmp, kEOSTag) != 0; ) {}
+    for (char tmp[MAX_STRING]; ReadWord(tmp) && strcmp(tmp, kEOS1Tag) != 0; ) {}
   }
 }
 
@@ -235,7 +233,8 @@ void Vocabulary::Sort(bool stable) {
 
 void Vocabulary::BuildFromCorpus(const std::string& fpath, bool show_progress) {
   char buffer[MAX_STRING];
-  AddWord(kEOSTag);
+  AddWord(kEOS1Tag);
+  AddWord(kEOS2Tag);
 
   WordReader reader(fpath.c_str());
   for (int64_t read_words = 0; reader.ReadWord(buffer); ++read_words) {

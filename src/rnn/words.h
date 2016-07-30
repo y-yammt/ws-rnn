@@ -10,6 +10,10 @@
 
 #include "./settings.h"
 
+const char kEOS1Tag[] = "</s0>";
+const int kEOS1Size = sizeof(kEOS1Tag);
+const char kEOS2Tag[] = "</s1>";
+const int kEOS2Size = sizeof(kEOS2Tag);
 
 class Vocabulary {
  public:
