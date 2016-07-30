@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <cmath>
+#include <random>
 #include <Eigen/Dense>
 
 #include "./settings.h"
@@ -54,14 +55,29 @@ void LoadMatrixArray(std::vector<Matrix*> array, FILE* fo) {
   }
 }
 
+inline void InitUniform(std::mt19937& engine, Real max_value, size_t sz, Real* weights) {
+  std::uniform_real_distribution<Real> distribution(-max_value, max_value);
+  for (size_t i = 0; i < sz; ++i) {
+    weights[i] = distribution(engine);
+  }
+}
 
+/*
 inline void InitUniform(Real max_value, size_t sz, Real* weights) {
   for (size_t i = 0; i < sz; i++) {
     weights[i] = (rand() / static_cast<Real>(RAND_MAX) - 0.5) * 2 * max_value;
   }
 }
+*/
 
+inline void InitNormal(std::mt19937& engine, Real stddev, size_t sz, Real* weights) {
+  std::normal_distribution<Real> distribution(0.0, stddev);
+  for (size_t i = 0; i < sz; ++i) {
+    weights[i] = distribution(engine);
+  }
+}
 
+/*
 inline void InitNormal(Real stddev, size_t sz, Real* weights) {
   for (size_t i = 0; i < sz; i++) {
     Real standard_normal = -6;
@@ -71,17 +87,17 @@ inline void InitNormal(Real stddev, size_t sz, Real* weights) {
     weights[i] = standard_normal * stddev;
   }
 }
-
+ */
 
 template<class Matrix>
-inline void InitUniform(Real max_value, Matrix* weights) {
-  InitUniform(max_value, weights->cols() * weights->rows(), weights->data());
+inline void InitUniform(std::mt19937& engine, Real max_value, Matrix* weights) {
+  InitUniform(engine, max_value, weights->cols() * weights->rows(), weights->data());
 }
 
 
 template<class Matrix>
-inline void InitNormal(Real stddev, Matrix* weights) {
-  InitNormal(stddev, weights->cols() * weights->rows(), weights->data());
+inline void InitNormal(std::mt19937& engine, Real stddev, Matrix* weights) {
+  InitNormal(engine, stddev, weights->cols() * weights->rows(), weights->data());
 }
 
 

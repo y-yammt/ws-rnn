@@ -21,9 +21,9 @@ namespace {
 }
 
 TEST(UtilTest, InitUniform) {
-  srand(kRandomSeed);
+  std::mt19937_64 engine(kRandomSeed);
   Real random_values[kNumValues];
-  InitUniform(kMaxValue, kNumValues, random_values);
+  InitUniform(engine, kMaxValue, kNumValues, random_values);
   auto stat = getMeanVariance(kNumValues, random_values);
   EXPECT_NEAR(0.0, stat.first, 1.0);
   EXPECT_NEAR(4.0 * kMaxValue * kMaxValue / 12.0, stat.second,
@@ -31,9 +31,9 @@ TEST(UtilTest, InitUniform) {
 }
 
 TEST(UtilTest, InitNormal) {
-  srand(kRandomSeed);
+  std::mt19937_64 engine(kRandomSeed);
   Real random_values[kNumValues];
-  InitNormal(1.0, kNumValues, random_values);
+  InitNormal(engine, 1.0, kNumValues, random_values);
   auto stat = getMeanVariance(kNumValues, random_values);
   EXPECT_NEAR(0.0, stat.first, kEps);
   EXPECT_NEAR(1.0, stat.second, kEps);
