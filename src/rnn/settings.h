@@ -24,5 +24,4 @@ typedef float Real;
 // type of word indices
 typedef unsigned WordIndex;
 
-
 #endif  // FASTER_RNNLM_SETTINGS_H_

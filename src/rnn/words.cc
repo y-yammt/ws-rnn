@@ -264,6 +264,14 @@ void Vocabulary::Dump(const std::string& fpath) const {
   fclose(file);
 }
 
+void Vocabulary::Load(const std::vector<WordFreq>& vec) {
+  for (auto itr = vec.begin(); itr != vec.end(); ++itr) {
+    WordIndex wid = AddWord((itr->first).c_str());
+    words_[wid].freq = itr->second;
+  }
+  Sort(true);
+}
+
 void Vocabulary::Load(const std::string& fpath) {
   FILE *file = fopen(fpath.c_str(), "rb");
   if (file == NULL) {

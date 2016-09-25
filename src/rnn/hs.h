@@ -8,9 +8,8 @@
 #include "./settings.h"
 #include "./util.h"
 #include "./words.h"
+#include "./maxent.h"
 
-
-class MaxEnt;
 
 class HSTree {
  public:

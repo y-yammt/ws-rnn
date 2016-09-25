@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "./hierarchical_softmax.h"
+#include "./hs.h"
 #include "./maxent.h"
 #include "./settings.h"
 #include "./util.h"

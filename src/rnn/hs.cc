@@ -1,4 +1,4 @@
-#include "./hierarchical_softmax.h"
+#include "hs.h"
 
 #include <stdio.h>
 #include <stdlib.h>

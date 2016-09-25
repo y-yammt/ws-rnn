@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "./hierarchical_softmax.h"
+#include "./hs.h"
 #include "./layers/interface.h"
 #include "./nce.h"
 #include "./nnet.h"
