@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "./settings.h"
+#include "./util.h"
 
 
 class Vocabulary {
@@ -29,6 +30,9 @@ class Vocabulary {
 
   // Returns a frequence of a word by its index; for invalid indices - UB
   int64_t GetWordFrequency(WordIndex index) const { return words_[index].freq; }
+
+  // Reads the vocabulary from the wordfreq vector
+  void Load(const std::vector<WordFreq>& wordFreq);
 
   // Reads the vocabulary from the file
   void Load(const std::string& fpath);

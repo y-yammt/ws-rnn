@@ -41,7 +41,7 @@ INCLUDE_DIRECTORIES(${RNN_DIR}/layers)
 
 # Build rnnlm
 SET(SOURCE_FILES
-  ${RNN_SOURCE_DIR}/hierarchical_softmax.cc
+  ${RNN_SOURCE_DIR}/hs.cc
   ${RNN_SOURCE_DIR}/maxent.cc
   ${RNN_SOURCE_DIR}/nce.cc
   ${RNN_SOURCE_DIR}/nnet.cc
@@ -86,8 +86,11 @@ IF (TEST)
 
   SET(UNIT_TEST_FILES
     ${SOURCE_FILES}
+    ${RNN_SOURCE_DIR}/hs_test.cc
     ${RNN_SOURCE_DIR}/util_test.cc
-  )
+    ${RNN_SOURCE_DIR}/layers/activation_test.cc
+    ${RNN_SOURCE_DIR}/layers/layer_test.cc
+    ${RNN_SOURCE_DIR}/layers/base_grad_test.cc)
 
   ADD_EXECUTABLE(${UNIT_TEST_NAME} ${RNN_SOURCE_DIR}/rnnlm_tests.cc ${UNIT_TEST_FILES})
 

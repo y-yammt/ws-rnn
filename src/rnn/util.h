@@ -4,6 +4,8 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <cmath>
+#include <string>
+#include <utility>
 #include <Eigen/Dense>
 
 #include "./settings.h"
@@ -13,6 +15,8 @@ using Eigen::Ref;
 typedef Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> RowMatrix;
 typedef Eigen::Matrix<Real, 1, Eigen::Dynamic, Eigen::RowMajor> RowVector;
 
+// type of word and its frequency
+typedef std::pair<std::string, uint64_t> WordFreq;
 
 inline void FreadAllOrDie(void* ptr, size_t size, size_t count, FILE* fo, const char* message) {
   size_t read = fread(ptr, size, count, fo);

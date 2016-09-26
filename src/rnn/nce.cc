@@ -11,7 +11,7 @@
 #ifndef NOCUDA
 #include "./cuda_softmax.h"
 #endif
-#include "./hierarchical_softmax.h"
+#include "./hs.h"
 #include "./maxent.h"
 #include "./util.h"
 #include "./words.h"
