@@ -19,7 +19,6 @@ Real SimpleCriterion::Forward(const Ref<const RowMatrix> hidden_states, int step
   if (steps == 0) {
     return 0;
   }
-
   return (hidden_states.topRows(steps).array().square().matrix() * vector.transpose()).mean();
 }
 
@@ -42,7 +41,7 @@ void LayerTest::TearDown() {
 }
 
 ::testing::AssertionResult
-LayerTest::checkHiddenLayerOutputToInput(IRecLayer* layer, int size, int steps) {
+LayerTest::CheckHiddenLayerOutputToInput(IRecLayer *layer, int size, int steps) {
   std::shared_ptr<IRecUpdater> updater(layer->CreateUpdater());
   SimpleCriterion crit(size);
 
@@ -62,16 +61,16 @@ LayerTest::checkHiddenLayerOutputToInput(IRecLayer* layer, int size, int steps) 
   RowMatrix input(steps, size);
   InitNormal(1, &input);
 
-  return checkGradients<RowMatrix>(input, compute_cost, compute_grads);
+  return CheckGradients<RowMatrix>(input, compute_cost, compute_grads);
 }
 
 template<class Matrix, class T1, class T2>
 ::testing::AssertionResult
-LayerTest::checkHiddenLayerSingleWeightGradients(
-    IRecLayer* layer, IRecUpdater* updater, const SimpleCriterion& crit,
-    Matrix weight, int weight_idx,
-    T1 GetWeights, T2 GetGradients,
-    int steps) {
+LayerTest::CheckHiddenLayerSingleWeightGradients(
+        IRecLayer *layer, IRecUpdater *updater, const SimpleCriterion &crit,
+        Matrix weight, int weight_idx,
+        T1 GetWeights, T2 GetGradients,
+        int steps) {
   auto compute_cost =
       [layer, updater, steps, crit, GetWeights, GetGradients] (const Matrix& weight) {
         *GetWeights(layer) = weight;
@@ -88,11 +87,11 @@ LayerTest::checkHiddenLayerSingleWeightGradients(
         return *GetGradients(updater);
       };
 
-  return checkGradients<Matrix>(weight, compute_cost, compute_grads);
+  return CheckGradients<Matrix>(weight, compute_cost, compute_grads);
 }
 
 ::testing::AssertionResult
-LayerTest::checkHiddenLayerWeightGradients(IRecLayer* layer, int size, int steps) {
+LayerTest::CheckHiddenLayerWeightGradients(IRecLayer *layer, int size, int steps) {
   std::shared_ptr<IRecUpdater> updater(layer->CreateUpdater());
   SimpleCriterion crit(size);
 
@@ -104,13 +103,15 @@ LayerTest::checkHiddenLayerWeightGradients(IRecLayer* layer, int size, int steps
   for (int weight_idx = 0; weight_idx < matrix_weight_count; ++weight_idx) {
     fprintf(stderr, "\rTesting weight matrix %d of %d\t", weight_idx + 1, matrix_weight_count);
     const RowMatrix& initial_weights = *layer->GetWeights()->GetMatrices()[weight_idx];
-    ::testing::AssertionResult result = checkHiddenLayerSingleWeightGradients(
-        layer, updater.get(), crit, initial_weights, weight_idx,
-        [weight_idx] (IRecLayer* layer) {
-          return layer->GetWeights()->GetMatrices()[weight_idx]; },
-        [weight_idx] (IRecUpdater* updater) {
-          return updater->GetMatrices()[weight_idx]->GetGradients(); },
-        steps
+    ::testing::AssertionResult result = CheckHiddenLayerSingleWeightGradients(
+            layer, updater.get(), crit, initial_weights, weight_idx,
+            [weight_idx](IRecLayer *layer) {
+                return layer->GetWeights()->GetMatrices()[weight_idx];
+            },
+            [weight_idx](IRecUpdater *updater) {
+                return updater->GetMatrices()[weight_idx]->GetGradients();
+            },
+            steps
     );
 
     if (!result) {
@@ -122,13 +123,15 @@ LayerTest::checkHiddenLayerWeightGradients(IRecLayer* layer, int size, int steps
   for (int weight_idx = 0; weight_idx < vector_weight_count; ++weight_idx) {
     fprintf(stderr, "\rTesting weight vector %d of %d\t", weight_idx + 1, vector_weight_count);
     RowVector initial_weights = *layer->GetWeights()->GetVectors()[weight_idx];
-    ::testing::AssertionResult result = checkHiddenLayerSingleWeightGradients(
-        layer, updater.get(), crit, initial_weights, weight_idx,
-        [weight_idx] (IRecLayer* layer) {
-          return layer->GetWeights()->GetVectors()[weight_idx]; },
-        [weight_idx] (IRecUpdater* updater) {
-          return updater->GetVectors()[weight_idx]->GetGradients(); },
-        steps);
+    ::testing::AssertionResult result = CheckHiddenLayerSingleWeightGradients(
+            layer, updater.get(), crit, initial_weights, weight_idx,
+            [weight_idx](IRecLayer *layer) {
+                return layer->GetWeights()->GetVectors()[weight_idx];
+            },
+            [weight_idx](IRecUpdater *updater) {
+                return updater->GetVectors()[weight_idx]->GetGradients();
+            },
+            steps);
 
     if (!result) {
       return result;
@@ -176,8 +179,8 @@ TEST_F(LayerTest, GradTest) {
           fprintf(stderr,
                   "Testing hidden: type=%s, count=%d, size=%d, steps=%d\n",
                   hidden_type, count, kLayerSize, steps);
-          EXPECT_TRUE(checkHiddenLayerOutputToInput(layer.get(), kLayerSize, steps));
-          EXPECT_TRUE(checkHiddenLayerWeightGradients(layer.get(), kLayerSize, steps));
+          EXPECT_TRUE(CheckHiddenLayerOutputToInput(layer.get(), kLayerSize, steps));
+          EXPECT_TRUE(CheckHiddenLayerWeightGradients(layer.get(), kLayerSize, steps));
         }
       }
     }

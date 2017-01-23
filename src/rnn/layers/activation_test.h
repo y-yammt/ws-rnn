@@ -8,8 +8,8 @@ class ActivationTest : public BaseGradTest {
   virtual void SetUp();
   virtual void TearDown();
 
-  ::testing::AssertionResult checkActivation(
-      IActivation* activation, int size);
+  ::testing::AssertionResult CheckActivation(
+          IActivation *activation, int size);
 };
 
 #endif //WS_RNN_ACTIVATION_TEST_H

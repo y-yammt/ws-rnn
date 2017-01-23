@@ -12,7 +12,7 @@ void HSTest::TearDown() {
   BaseGradTest::TearDown();
 }
 
-void HSTest::checkHS(const Vocabulary& vocab, int hidden_size, MaxEnt* maxent) {
+void HSTest::CheckHS(const Vocabulary &vocab, int hidden_size, MaxEnt *maxent) {
   HSTree* tree = HSTree::CreateHuffmanTree(vocab, hidden_size, kHSArity);
 
   std::vector<uint64_t> feature_hashes;
@@ -48,7 +48,7 @@ void HSTest::checkHS(const Vocabulary& vocab, int hidden_size, MaxEnt* maxent) {
 
   RowVector hidden(hidden_size);
   InitUniform(1., &hidden);
-  EXPECT_TRUE(checkGradients<RowVector>(hidden, compute_cost, compute_grads));
+  EXPECT_TRUE(CheckGradients<RowVector>(hidden, compute_cost, compute_grads));
   delete tree;
 }
 
@@ -57,7 +57,7 @@ TEST_F(HSTest, HierarchicalSoftmaxWithoutMaxEnt) {
   const std::vector<int> sizes = {1, 7, 131};
   for (size_t i = 0; i < sizes.size(); ++i) {
     for (int round = 0; round < 10; ++round) {
-      checkHS(getVocab(), sizes[i], nullptr);
+      CheckHS(GetVocab(), sizes[i], nullptr);
     }
   }
 }
@@ -75,7 +75,7 @@ TEST_F(HSTest, HierarchicalSoftmaxWithMaxEnt) {
   }
   for (size_t i = 0; i < sizes.size(); ++i) {
     for (int round = 0; round < 10; ++round) {
-      checkHS(getVocab(), sizes[i], &maxent);
+      CheckHS(GetVocab(), sizes[i], &maxent);
     }
   }
 }

@@ -20,8 +20,8 @@ void ActivationTest::TearDown() {
   BaseGradTest::TearDown();
 }
 
-::testing::AssertionResult ActivationTest::checkActivation(
-    IActivation* activation, int size) {
+::testing::AssertionResult ActivationTest::CheckActivation(
+        IActivation *activation, int size) {
   auto compute_cost = [activation] (Real input) {
     activation->Forward(&input, 1);
     return input;
@@ -36,7 +36,7 @@ void ActivationTest::TearDown() {
   RowVector x(size);
   InitNormal(10, &x);
   for (int i = 0; i < size; ++i) {
-    ::testing::AssertionResult result = checkDerivative(x[i], compute_cost, compute_grads);
+    ::testing::AssertionResult result = CheckDerivative(x[i], compute_cost, compute_grads);
     if (!result) {
       return result;
     }
@@ -48,6 +48,6 @@ TEST_F(ActivationTest, GradTest) {
   for (auto& pair : kActivationFactories) {
     srand(0);
     std::shared_ptr<IActivation> activation(pair.second());
-    EXPECT_TRUE(checkActivation(activation.get(), 1000));
+    EXPECT_TRUE(CheckActivation(activation.get(), 1000));
   }
 }

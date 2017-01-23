@@ -13,17 +13,17 @@ class BaseGradTest : public ::testing::Test {
   virtual void TearDown();
 
   template<class Matrix>
-  ::testing::AssertionResult checkGradients(
-      Matrix& params,
-      std::function<Real(const Matrix&)> calc_cost,
-      std::function<Matrix(const Matrix&)> calc_grads);
+  ::testing::AssertionResult CheckGradients(
+          Matrix &params,
+          std::function<Real(const Matrix &)> calc_cost,
+          std::function<Matrix(const Matrix &)> calc_grads);
 
-  ::testing::AssertionResult checkDerivative(
-      Real param,
-      std::function<Real(Real)> calc_cost,
-      std::function<Real(Real)> calc_grads);
+  ::testing::AssertionResult CheckDerivative(
+          Real param,
+          std::function<Real(Real)> calc_cost,
+          std::function<Real(Real)> calc_grads);
 
-  const Vocabulary& getVocab();
+  const Vocabulary& GetVocab();
 
  private:
   static Vocabulary vocab;

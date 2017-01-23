@@ -2,11 +2,11 @@
 
 namespace {
 #ifdef USE_DOUBLES
-static const Real ArgEps = 1e-4;
-static const Real ToleranceEps = 1e-5;
+static const Real kArgEps = 1e-4;
+static const Real kToleranceEps = 1e-5;
 #else
-static const Real ArgEps = 1e-3;
-static const Real ToleranceEps = 2e-3;
+static const Real kArgEps = 1e-3;
+static const Real kToleranceEps = 2e-3;
 #endif
 }
 
@@ -75,10 +75,10 @@ void BaseGradTest::TearDown() {
 }
 
 template<class Matrix>
-::testing::AssertionResult BaseGradTest::checkGradients(
-    Matrix& params,
-    std::function<Real(const Matrix&)> calc_cost,
-    std::function<Matrix(const Matrix&)> calc_grads) {
+::testing::AssertionResult BaseGradTest::CheckGradients(
+        Matrix &params,
+        std::function<Real(const Matrix &)> calc_cost,
+        std::function<Matrix(const Matrix &)> calc_grads) {
   Matrix analytical_grads = calc_grads(params);
 
   for (int r = 0; r < params.rows(); ++r) {
@@ -86,14 +86,14 @@ template<class Matrix>
       double analytical_grad = analytical_grads(r, c);
       double orig_value = params(r, c);
 
-      params(r, c) = orig_value + ArgEps;
+      params(r, c) = orig_value + kArgEps;
       double cost_plus = calc_cost(params);
-      params(r, c) = orig_value - ArgEps;
+      params(r, c) = orig_value - kArgEps;
       double cost_minus = calc_cost(params);
-      double numerical_grad = (cost_plus - cost_minus) / (2. * ArgEps);
+      double numerical_grad = (cost_plus - cost_minus) / (2. * kArgEps);
       params(r, c) = orig_value;
 
-      if (std::abs(analytical_grad - numerical_grad) > ToleranceEps
+      if (std::abs(analytical_grad - numerical_grad) > kToleranceEps
           || isnan(analytical_grad) || isnan(numerical_grad)) {
         return ::testing::AssertionFailure()
             << params(0, 0) << " " << analytical_grads(0, 0)
@@ -102,7 +102,7 @@ template<class Matrix>
             << " at pos " << r << "," << c
             << ": (numerical != analytical) "
             << numerical_grad << " != " << analytical_grad
-            << " (tolerance: "<< ToleranceEps << ")\n";
+            << " (tolerance: "<< kToleranceEps << ")\n";
       }
     }
   }
@@ -110,30 +110,30 @@ template<class Matrix>
 }
 
 template
-::testing::AssertionResult BaseGradTest::checkGradients<RowVector>(
-    RowVector& params,
-    std::function<Real(const RowVector&)> calc_cost,
-    std::function<RowVector(const RowVector&)> calc_grads);
+::testing::AssertionResult BaseGradTest::CheckGradients<RowVector>(
+        RowVector &params,
+        std::function<Real(const RowVector &)> calc_cost,
+        std::function<RowVector(const RowVector &)> calc_grads);
 
 template
-::testing::AssertionResult BaseGradTest::checkGradients<RowMatrix>(
-    RowMatrix& params,
-    std::function<Real(const RowMatrix&)> calc_cost,
-    std::function<RowMatrix(const RowMatrix&)> calc_grads);
+::testing::AssertionResult BaseGradTest::CheckGradients<RowMatrix>(
+        RowMatrix &params,
+        std::function<Real(const RowMatrix &)> calc_cost,
+        std::function<RowMatrix(const RowMatrix &)> calc_grads);
 
-::testing::AssertionResult BaseGradTest::checkDerivative(
-    Real param,
-    std::function<Real(Real)> calc_cost,
-    std::function<Real(Real)> calc_grads) {
+::testing::AssertionResult BaseGradTest::CheckDerivative(
+        Real param,
+        std::function<Real(Real)> calc_cost,
+        std::function<Real(Real)> calc_grads) {
   typedef Eigen::Matrix<Real, 1, 1> ScalarMatrix;
   ScalarMatrix param_as_matrix = ScalarMatrix::Constant(param);
-  return checkGradients<ScalarMatrix>(
-      param_as_matrix,
-      [&calc_cost] (const ScalarMatrix& in) { return calc_cost(in(0)); },
-      [&calc_grads](const ScalarMatrix& in) { return ScalarMatrix::Constant(calc_grads(in(0))); }
+  return CheckGradients<ScalarMatrix>(
+          param_as_matrix,
+          [&calc_cost](const ScalarMatrix &in) { return calc_cost(in(0)); },
+          [&calc_grads](const ScalarMatrix &in) { return ScalarMatrix::Constant(calc_grads(in(0))); }
   );
 }
 
-const Vocabulary& BaseGradTest::getVocab() {
+const Vocabulary& BaseGradTest::GetVocab() {
   return BaseGradTest::vocab;
 }
