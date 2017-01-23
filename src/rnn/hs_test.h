@@ -10,7 +10,7 @@ class HSTest : public BaseGradTest {
   virtual void TearDown();
 
  public:
-  void checkHS(const Vocabulary& vocab, int hidden_size, MaxEnt* maxent);
+  void CheckHS(const Vocabulary &vocab, int hidden_size, MaxEnt *maxent);
 };
 
 #endif // WS_RNN_HS_TEST_H

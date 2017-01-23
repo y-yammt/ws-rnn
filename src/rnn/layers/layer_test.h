@@ -20,18 +20,18 @@ class LayerTest : public BaseGradTest {
   virtual void TearDown();
 
   ::testing::AssertionResult
-  checkHiddenLayerOutputToInput(IRecLayer* layer, int size, int steps);
+  CheckHiddenLayerOutputToInput(IRecLayer *layer, int size, int steps);
 
   template<class Matrix, class T1, class T2>
   ::testing::AssertionResult
-  checkHiddenLayerSingleWeightGradients(
-      IRecLayer* layer, IRecUpdater* updater, const SimpleCriterion& crit,
-      Matrix weight, int weight_idx,
-      T1 GetWeights, T2 GetGradients,
-      int steps);
+  CheckHiddenLayerSingleWeightGradients(
+          IRecLayer *layer, IRecUpdater *updater, const SimpleCriterion &crit,
+          Matrix weight, int weight_idx,
+          T1 GetWeights, T2 GetGradients,
+          int steps);
 
   ::testing::AssertionResult
-  checkHiddenLayerWeightGradients(IRecLayer* layer, int size, int steps);
+  CheckHiddenLayerWeightGradients(IRecLayer *layer, int size, int steps);
 };
 
 #endif // WS_RNN_LAYER_TEST_H
